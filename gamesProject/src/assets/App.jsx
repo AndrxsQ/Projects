@@ -1,7 +1,9 @@
+import { MainMenu } from "../components/MainMenu";
+
 export function App () {
     return (
-        <div>
-            <h1>Hello World</h1>
+        <div id="App">
+            <MainMenu></MainMenu>
         </div>
     )
 }
