@@ -2,7 +2,9 @@ import { useState } from 'react'
 import './App.css'
 import { mineSquare } from './constants.js'
 
-let mineArray = mineSquare(25, 5)
+const nSquares = 100
+const nMines =  20
+let mineArray = mineSquare(nSquares, nMines)
 
 const Square = ({ children, updateBoard, index }) => {
     const handleClick = () => {
@@ -16,7 +18,7 @@ const Square = ({ children, updateBoard, index }) => {
 }
 
 export function App() {
-    const [board, setBoard] = useState(Array(25).fill(null))
+    const [board, setBoard] = useState(Array(nSquares).fill(null))
     let [gameOver, setGameOver] = useState(false)
     const checkMine = (index) => {
         for (let i = 0; i < mineArray.length; i++) {
@@ -38,9 +40,9 @@ export function App() {
     }
 
     const restart = () => {
-        setBoard(Array(25).fill(null))
+        setBoard(Array(nSquares).fill(null))
         setGameOver(false)
-        mineArray = mineSquare(25, 5)
+        mineArray = mineSquare(nSquares, nMines)
     }
 
     const updateBoard = (index) => {
