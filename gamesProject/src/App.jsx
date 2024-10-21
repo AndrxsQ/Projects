@@ -2,9 +2,9 @@ import { useState } from 'react'
 import './App.css'
 import { mineSquare } from './constants.js'
 
-const mineArray = mineSquare(25, 5)
+let mineArray = mineSquare(25, 5)
 
-const Square = ({ children, updateBoard, mineSquare, index}) => {
+const Square = ({ children, updateBoard, index }) => {
     const handleClick = () => {
         updateBoard(index)
     }
@@ -17,13 +17,40 @@ const Square = ({ children, updateBoard, mineSquare, index}) => {
 
 export function App() {
     const [board, setBoard] = useState(Array(25).fill(null))
+    let [gameOver, setGameOver] = useState(false)
+    const checkMine = (index) => {
+        for (let i = 0; i < mineArray.length; i++) {
+            if (index == mineArray[i]) {
+                return true
+            }
+        }
+        return false
+    }
+
+    const showMines = (boardToShow) => {
+        for (let i = 0; i < mineArray.length; i++) {
+            if(boardToShow[mineArray[i]] != "M") {
+                boardToShow[mineArray[i]] = "M"
+                setBoard(boardToShow)
+            }
+        }
+        setGameOver(true)
+    }
+
+    const restart = () => {
+        setBoard(Array(25).fill(null))
+        setGameOver(false)
+        mineArray = mineSquare(25, 5)
+    }
 
     const updateBoard = (index) => {
-        const newBoard = [... board]
-        if (board[index] == null) {
-            newBoard[index] = index
-        } else {
-            newBoard[index] = null
+        const newBoard = [...board]
+        if (board[index]) { return }
+        if (checkMine(index)) {
+            newBoard[index] = "M"
+            setBoard(newBoard)
+            showMines(newBoard)
+            return
         }
         setBoard(newBoard)
         console.log(mineArray)
@@ -48,6 +75,21 @@ export function App() {
                     })
                 }
             </section>
+
+            {
+                gameOver == true && (
+                    <section className="winner">
+                        <div className="text">
+                            <h2>
+                                You have failed
+                            </h2>
+                            <footer>
+                                <button onClick={restart}>Play Again</button>
+                            </footer>
+                        </div>
+                    </section>
+                )
+            }
         </main>
     )
 }
