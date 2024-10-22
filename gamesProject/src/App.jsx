@@ -6,12 +6,30 @@ const nSquares = 100
 const nMines =  20
 let mineArray = mineSquare(nSquares, nMines)
 
+const checkMine = (index) => {
+    for (let i = 0; i < mineArray.length; i++) {
+        if (index == mineArray[i]) {
+            return true
+        }
+    }
+    return false
+}
+
 const Square = ({ children, updateBoard, index }) => {
+    const [isActive, setIsActive] = useState(false)
+    const isMine = checkMine(index)
+
+    const dynamicStyle = {
+        backgroundColor: isMine ? "red" : ""
+    }
+
     const handleClick = () => {
+        setIsActive(!isActive)
         updateBoard(index)
     }
+
     return (
-        <div onClick={handleClick} className="square">
+        <div style={dynamicStyle} onClick={handleClick} className="square">
             {children}
         </div>
     )
@@ -19,15 +37,7 @@ const Square = ({ children, updateBoard, index }) => {
 
 export function App() {
     const [board, setBoard] = useState(Array(nSquares).fill(null))
-    let [gameOver, setGameOver] = useState(false)
-    const checkMine = (index) => {
-        for (let i = 0; i < mineArray.length; i++) {
-            if (index == mineArray[i]) {
-                return true
-            }
-        }
-        return false
-    }
+    const [gameOver, setGameOver] = useState(false)
 
     const showMines = (boardToShow) => {
         for (let i = 0; i < mineArray.length; i++) {
@@ -47,12 +57,14 @@ export function App() {
 
     const updateBoard = (index) => {
         const newBoard = [...board]
-        if (board[index]) { return }
+        if (newBoard[index]) { return }
         if (checkMine(index)) {
             newBoard[index] = "M"
             setBoard(newBoard)
             showMines(newBoard)
             return
+        } else {
+
         }
         setBoard(newBoard)
         console.log(mineArray)
